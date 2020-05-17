@@ -1,0 +1,25 @@
+import numpy as np
+from DS import *
+from itertools import product
+
+nsim = 1000
+nvec = [25,50,100,250,500,1000]
+rvec = [1,2,4,8]
+rho = 0.9
+outp = np.zeros((nsim,len(nvec),len(rvec)))
+for n,r in product(nvec,rvec):
+    print(n,r)
+    for isim in range(nsim):
+        # Data generating process    
+        x = np.random.normal(size=(n,r))
+        y = np.random.normal(size=(n,))
+        for i in range(1,n):
+            x[i,:] += rho*x[i-1,:]
+            y[i] += rho*y[i-1]
+        ones = np.ones((n,1))
+        x = np.hstack((ones,x))
+
+        # Run a model and get statistics
+        model = least_squares_regressor(x,y)
+        stat = model.r_squared
+        outp[isim,nvec.index(n),rvec.index(r)] = stat

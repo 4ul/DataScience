@@ -1,0 +1,21 @@
+# Simulation
+
+import numpy as np
+import pandas as pd
+
+n = 1000
+rho = np.array([0.75,0.05])
+phi = np.array([0.25])
+phi = np.concatenate((np.ones(1),phi))
+m = max(len(rho),len(phi))
+if len(rho)!=m: rho = np.concatenate((rho,np.zeros(shape=m-len(rho))))
+if len(phi)!=m: phi = np.concatenate((phi,np.zeros(shape=m-len(phi))))
+print(rho)
+print(phi)
+
+e = np.random.normal(size=n+100) ## 100 burn-in
+x = e.copy()
+for i in range(m,n+100):
+    x[i] = np.flip(x[i-m:i])@rho+np.flip(e[i-m+1:i+1])@phi
+x = x[100:] ## cut off the burn in
+pd.Series(x).plot();
