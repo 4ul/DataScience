@@ -1,0 +1,15 @@
+P = np.array([[1,1]])
+for n in range(2,4):
+    ones = np.ones([n,1])
+    zeros = np.zeros([P.shape[0],1])
+    ident = np.eye(n)
+    upper = np.hstack([ones,ident])
+    lower = np.hstack([zeros,P])
+    P = np.vstack([upper,lower])
+P
+covariates = np.random.normal(size=(1000,P.shape[0]))
+idiosyncratics = np.random.normal(size=(1000,P.shape[1]))
+z = covariates@np.diagflat(np.random.uniform(-1,2,size=P.shape[0]))@P+idiosyncratics
+np.corrcoef(z.T)
+
+np.diagflat(np.random.uniform(-1,2,size=P.shape[0]))@P

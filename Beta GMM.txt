@@ -1,0 +1,7 @@
+x = np.random.beta(a=3,b=1,size=(1000,))
+mx,sx = x.mean(),x.var()
+Q = mx*(1-mx)-sx
+Q /= sx
+a = mx*Q
+b = (1-mx)*Q
+a,b
