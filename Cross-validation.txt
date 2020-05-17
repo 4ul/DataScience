@@ -1,0 +1,24 @@
+def mean_squared_error(model,x,y):
+    return ((y-model.predict(x))**2).mean()
+folds = 5
+def k_fold_cross_validation(model,x,y,
+                            folds:int=5,
+                            seed=None,
+                            statistic=mean_squared_error):
+    n,r = x.shape
+    deck = np.arange(n)
+    outp = []
+    if seed is not None: np.random.seed(seed)
+    np.random.shuffle(deck)
+    for i in range(folds):
+        test = deck[int(i*n/folds):int((i+1)*n/folds)]
+        train_lower = deck[:int(i*n/folds)]
+        train_upper = deck[int((i+1)*n/folds):]
+        train = np.concatenate((train_lower,train_upper))
+        modl = model(x[train],y[train])
+        mspe = statistic(modl,x[test],y[test])
+        outp += [mspe]
+    return np.array(outp)
+
+from DS import *
+k_fold_cross_validation(least_squares_regressor,npx,npy).mean()

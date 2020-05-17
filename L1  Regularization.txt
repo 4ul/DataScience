@@ -1,0 +1,30 @@
+!pip install --user cvxopt
+
+import numpy as np
+import pandas as pd
+import cvxopt as cvx
+import cvxopt.solvers as solv
+from scipy.stats import zscore
+
+df = pd.read_csv('BWGHT.csv')
+npx = df[['cigs','faminc','male','white']].values
+npy = df['bwght'].values
+ones = np.ones((npx.shape[0],1))
+npx = np.hstack((ones,npx))
+
+
+thresh = 0.10
+def solve_lasso(x,y,thresh):
+    n,r = x.shape
+    P = np.kron(np.array([[1,-1],[-1,1]]),x.T@x)
+    q = -np.kron(np.array([[1],[-1]]),x.T@y.reshape(-1,1))
+    G_1 = -np.eye(2*r)
+    h_1 = np.zeros((2*r,1))
+    G_2 = np.ones((1,2*r))
+    h_2 = np.array([[thresh]])
+    G = np.vstack((G_1,G_2))
+    h = np.vstack((h_1,h_2))
+    opt = solv.qp(cvx.matrix(P),cvx.matrix(q),cvx.matrix(G),cvx.matrix(h))
+    opt = np.array(opt['x'])
+    return opt[:r,0]-opt[r:,0]
+solve_lasso(npx,npy,thresh)
