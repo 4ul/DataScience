@@ -1,0 +1,18 @@
+def gradient_descent(func,gradient,init_x:np.ndarray,learning_rate:float=0.05,max_reps:int=1000,maximize=False):
+    x = init_x.copy()
+    for i in range(max_reps):
+        gx = gradient(x)
+        x0 = x.copy()
+        flast = func(x)
+        x += gx*learning_rate if maximize else -gx*learning_rate
+        if (func(x)<flast and maximize and i>2) or (func(x)>flast and (not maximize) and i>2): 
+            x = x0
+            break
+    return x
+
+
+def gradient_descent(func,gradient,init_x:np.ndarray,learning_rate:float=0.05,max_reps:int=1000,maximize=False):
+    x = init_x.copy()
+    for i in range(max_reps):
+        x += gradient(x)*learning_rate if maximize else -gradient(x)*learning_rate
+    return x

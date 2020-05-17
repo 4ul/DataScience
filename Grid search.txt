@@ -1,0 +1,11 @@
+import numpy as np
+from itertools import product
+
+def grid_search(func,space,maximize=False):
+    vstates = [(x,func(x)) for x in space]
+    vstates.sort(key=lambda x: x[1])
+    return vstates[-1][0] if maximize else vstates[0][0]
+
+x = np.linspace(0,10,1000).tolist()
+func = lambda x: (x[0]-4.0001)**2*(x[1]-6.0001)**2
+grid_search(func,product(x,x))

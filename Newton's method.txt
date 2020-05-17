@@ -1,0 +1,8 @@
+def newton(gradient,hessian,init_x:np.ndarray,max_reps:int=100,tolerance:float=1e-6):
+    x = init_x.copy()
+    for i in range(max_reps):
+        update = -np.linalg.solve(hessian(x),gradient(x))
+        x += update
+        if np.abs(update).sum()<tolerance:
+            return (x,i)
+    raise Exception('Newton did not converge')

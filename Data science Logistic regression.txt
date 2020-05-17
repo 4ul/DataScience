@@ -1,0 +1,21 @@
+# Linear formulation
+
+expit = lambda x: 1/(1+np.exp(-x))
+def loglike(x,y,b):
+    Fx = expit(b.T@x.T)
+    return np.log(Fx)@y+np.log(1-Fx)@(1-y)
+
+# Gradient
+
+def gradient(x,y,b):
+    Fx = expit(x@b)
+    return x.T@(y-Fx)
+
+# Hessian
+
+def hessian(x,y,b):
+    Fx = expit(x@b)
+    fx = Fx*(1-Fx)
+    return -x.T@np.diagflat(fx.flatten())@x
+
+
