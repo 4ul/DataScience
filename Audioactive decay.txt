@@ -1,0 +1,20 @@
+last = '1'
+for i in range(15):
+    print(last)
+    last = list(last)
+    build = ''
+    current = '0'
+    count = 0
+    for mark in range(len(last)):
+        if current==last[mark]:
+            count += 1
+            continue
+        elif count!=0:
+            build += str(count)
+            build += current
+        count = 1
+        current = last[mark]
+    build += str(count)
+    build += current
+    last = build
+    

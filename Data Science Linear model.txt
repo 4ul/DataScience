@@ -1,0 +1,36 @@
+df['(intercept)'] = 1
+x = df[['(intercept)','cigs','faminc']]
+y = df['bwght']
+b = np.linalg.solve(x.T@x,x.T@y)
+e = y-x@b
+vb = e.var()*np.linalg.inv(x.T@x)
+se = np.sqrt(np.diagonal(vb))
+tstat = b/se
+
+
+class linear_model:
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.b = np.linalg.solve(x.T@x,x.T@y)
+        e = y-x@b
+        self.vb = self.vcov_b(e)
+        self.se = np.sqrt(np.diagonal(self.vb))
+        self.tstat = self.b/self.se
+    def vcov_b(self,e):
+        x = self.x
+        return e.var()*np.linalg.inv(x.T@x)
+class white(linear_model):
+    def vcov_b(self,e):
+        x = self.x
+        meat = np.diagflat(e.values**2)
+        bread = np.linalg.inv(x.T@x)@x.T
+        sandwich = bread@meat@bread.T
+        return sandwich
+
+
+
+df['(intercept)'] = 1
+x = df[['(intercept)','cigs','faminc']]
+y = df['bwght']
+white(x,y).se
